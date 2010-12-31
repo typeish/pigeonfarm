@@ -1,0 +1,12 @@
+application: pigeon-farm
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /dispatch/
+  script: dispatch.py
+  login: admin
+
+- url: .*
+  script: main.py
