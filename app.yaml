@@ -4,6 +4,9 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /inbound/
+  script: inbound.py
+
 - url: /tasks/.*
   script: tasks.py
   login: admin

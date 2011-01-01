@@ -3,7 +3,7 @@
     <td title="{{ message.dispatched }}" {% if message.dispatched %}class="is-dispatched"{% endif %}>{{ message.dispatched|timesince }}</td>
     <td title="{{ message.received }}">{{ message.received|timesince }} ago</td>
     <td>{{ message.sender_ip.ip }} <a href="/blacklist/add?ip_key={{ message.sender_ip.key }}">block</a>
-        <br /><a title="{{ message.sender_ip.geo.lat }},{{ message.sender_ip.geo.lon }}" href="http://maps.google.com/?q={{ message.sender_ip.loc_text }}" target="_blank">{{ message.sender_ip.loc_text }}</a></td>
+        <br /><a title="{{ message.sender_ip.geo.lat }},{{ message.sender_ip.geo.lon }}" href="http://maps.google.com/?q={{ message.sender_ip.geo.lat }},{{ message.sender_ip.geo.lon }}" target="_blank">{{ message.sender_ip.loc_text }} &raquo;</a></td>
     <td>{{ message.sender }}</td>
     <td>{{ message.subject }}</td>
     <td><div class="body-clipped">{{ message.body|escape|slice:":40" }}...</div><div class="body-full">{{ message.body|escape }}</div></td>
