@@ -52,7 +52,7 @@ class MessageHandler(webapp.RequestHandler):
             sender_ip.ip = raw_sender_ip
 
         sender_ip.put()
-        if not sender_ip.geo:
+        if not sender_ip.geo and settings.IPINFODB_KEY:
             taskqueue.add(url='/tasks/geolocate/', params={ 'ip_id': str(sender_ip.key()) })
 
         self.response.headers["Content-Type"] = "application/javascript"
