@@ -1,0 +1,21 @@
+{% extends "base.html.django" %}
+
+{% block body %}
+    <h1>IP Blacklist</h1>
+    <table>
+        <tr>
+            <th class="ip">IP</th>
+            <th class="blocked">Date Blocked</th>
+            <th class="count">Message Count</th>
+            <th class="notes">Notes</th>
+        </tr>
+        {% for ip in blacklist %}
+            <tr class="{% cycle odd,even %}">
+                <td>{{ ip.ip }}</td>
+                <td>{{ ip.blocked|timesince }}</td>
+                <td>{{ ip.count }}</td>
+                <td>{% if ip.notes %}{{ ip.notes }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock body %}

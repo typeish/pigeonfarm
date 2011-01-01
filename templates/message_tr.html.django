@@ -2,7 +2,7 @@
     <td>{{ forloop.counter }}</td>
     <td title="{{ message.dispatched }}" {% if message.dispatched %}class="is-dispatched"{% endif %}>{{ message.dispatched|timesince }}</td>
     <td title="{{ message.received }}">{{ message.received|timesince }} ago</td>
-    <td>{{ message.sender_ip }}</td>
+    <td>{{ message.sender_ip }} <a href="/blacklist/add?ip={{ message.sender_ip }}">block</a></td>
     <td>{{ message.sender }}</td>
     <td>{{ message.subject }}</td>
     <td><div class="body-clipped">{{ message.body|escape|slice:":40" }}...</div><div class="body-full">{{ message.body|escape }}</div></td>

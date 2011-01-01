@@ -1,66 +1,25 @@
-<!DOCTYPE html>
-<html lang="en-us">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        
-        <title>Sabe.us - {% block title %}{% endblock title %}</title>
+{% extends "base.html.django" %}
 
-        <style type="text/css">
-            table {
-                border-collapse: collapse;
-                width: 100%;
-            }
-            tr.odd:hover td, tr.even:hover td {
-                background-color: #cfc;
-            }
-            th.body {
-                width: 300px;
-            }
-            td {
-                height: 40px;
-                vertical-align: top;
-            }
-            tr.odd td {
-                background-color: #f7f1f1;
-            }
-            tr.even td {
-                background-color: #f1f1f7;
-            }
-            div.body-full {
-                display: none;
-            }
-            tr:hover div.body-full {
-                display: block;
-            }
-            tr:hover div.body-clipped {
-                display: none;
-            }
-        </style>
-
-    </head>
-
-    <body>
-        {{ user.nickname }} - <a href="{{ signout_url }}">sign out</a>
-        <h1>Messages</h1>
-        <table>
-            <tr>
-                <th class="count"></th>
-                <th class="dispatched">Dispatched</th>
-                <th class="received">Received</th>
-                <th class="sender-ip">Sender IP</th>
-                <th class="sender">Sender</th>
-                <th class="subject">Subject</th>
-                <th class="body">Body</th>
-            </tr>
-            {% for message in new_messages %}
-                {% include "message_tr.html.django" %}
-            {% endfor %}
+{% block body %}
+    <h1>Messages</h1>
+    <table>
+        <tr>
+            <th class="count"></th>
+            <th class="dispatched">Dispatched</th>
+            <th class="received">Received</th>
+            <th class="sender-ip">Sender IP</th>
+            <th class="sender">Sender</th>
+            <th class="subject">Subject</th>
+            <th class="body">Body</th>
+        </tr>
+        {% for message in new_messages %}
+            {% include "message_tr.html.django" %}
+        {% endfor %}
+        {% if old_messages %}
             <tr><td colspan="7" style="text-align: center; border:1px solid #ccc; padding-top: 10px;">OLD MESSAGES</td></tr>
             {% for message in old_messages %}
                 {% include "message_tr.html.django" %}
             {% endfor %}
-        </table>
-    </body>
-
-</html>
-
+        {% endif %}
+    </table>
+{% endblock body %}
