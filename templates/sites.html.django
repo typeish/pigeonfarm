@@ -1,0 +1,20 @@
+{% extends "base.html.django" %}
+
+{% block body %}
+    <form method="POST">
+        <input type="text" name="domain"/>
+        <button>Add Site</button>
+    </form>
+    
+    <h1>Sites</h1>
+    <table>
+        <tr>
+            <th class="domain">domain</th>
+        </tr>
+        {% for site in sites %}
+            <tr class="{% cycle odd,even %}">
+                <td>{{ site.domain }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock body %}

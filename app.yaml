@@ -4,8 +4,8 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /dispatch/
-  script: dispatch.py
+- url: /tasks/.*
+  script: tasks.py
   login: admin
 
 - url: .*

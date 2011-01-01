@@ -18,9 +18,10 @@ valid_callback = re.compile('^\w+(\.\w+)*$')
 class MessageHandler(webapp.RequestHandler):
     def get(self):
         result = {'status': 'failed'}
-        sender_ip = self.request.remote_addr
-        blocked_ip = BlockedIP.get_by_key_name(sender_ip)
-        if not blocked_ip:
+        raw_sender_ip = self.request.remote_addr
+        sender_ip = IP.get_or_insert(raw_sender_ip)
+        
+        if not sender_ip.blocked:
             site = self.request.get('site', None)
             sender = self.request.get('sender', None)
             subject = self.request.get('subject', None)
@@ -29,17 +30,30 @@ class MessageHandler(webapp.RequestHandler):
             if not referrer:
                 referrer = self.request.referer
         
-            recipients = settings.RECIPIENTS.get(site, None)
+            site = Site.all().filter('domain =', site).fetch(1)
+            if len(site) == 1:
+                site = site[0]
+            else:
+                site = None
         
-            if site and sender and subject and body and recipients:
-                message = Message(recipients=recipients, site=site, sender=sender, subject=subject, body=body, sender_ip=sender_ip, referrer=referrer)
+            if site and sender and subject and body:
+                message = Message(site=site, sender=sender, subject=subject, body=body, sender_ip=sender_ip, referrer=referrer)
                 message.put()
-                if recipients and len(recipients) > 0:
-                    taskqueue.add(url='/dispatch/', params={ 'message_id': str(message.key()) })
+                if site.dispatch and site.recipients:
+                    taskqueue.add(url='/tasks/dispatch/', params={ 'message_id': str(message.key()) })
                 result = {'status': 'success'}
+                sender_ip.count += 1
+            else:
+                sender_ip.blocked_count += 1
         else:
-            blocked_ip.count += 1
-            blocked_ip.put()
+            sender_ip.blocked_count += 1
+
+        if not sender_ip.ip:
+            sender_ip.ip = raw_sender_ip
+
+        sender_ip.put()
+        if not sender_ip.geo:
+            taskqueue.add(url='/tasks/geolocate/', params={ 'ip_id': str(sender_ip.key()) })
 
         self.response.headers["Content-Type"] = "application/javascript"
         callback = self.request.get('callback', None)
@@ -51,22 +65,21 @@ class MessageHandler(webapp.RequestHandler):
 class MessageBrowser(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
-        visit = LogVisit.get_or_insert(user.nickname())
+        
         context = {
-            'new_messages': Message.all().filter('blocked =', None).order('-received').filter('received >', visit.visit),
-            'old_messages': Message.all().filter('blocked =', None).order('-received').filter('received <=', visit.visit),
+            #'new_messages': Message.all().filter('blocked =', False).order('-received').filter('received >', datetime.now()),
+            'old_messages': Message.all().filter('blocked =', False).order('-received').filter('received <=', datetime.now()),
             'signout_url': users.create_logout_url("/"),
             'user': user,
         }
         result = render('messages.html.django', context)
-        visit.put()
         self.response.out.write(result)
 
 class BlacklistBrowser(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         context = {
-            'blacklist': BlockedIP.all(),
+            'blacklist': IP.all().filter('blocked =', True),
             'signout_url': users.create_logout_url("/"),
             'user': user,
         }
@@ -75,22 +88,47 @@ class BlacklistBrowser(webapp.RequestHandler):
 
 class BlacklistAdd(webapp.RequestHandler):
     def get(self):
-        ip = self.request.get('ip', None)
-        if ip:
-            blocked_ip = BlockedIP.get_or_insert(ip, ip=ip)
-            for m in Message.all().filter('blocked =', None).filter('sender_ip =', ip):
-                m.blocked = blocked_ip
-                m.put()
-                blocked_ip.count += 1
-            blocked_ip.put()
-        self.redirect("/")
+        ip_key = self.request.get('ip_key', None)
+        if ip_key:
+            try:
+                ip = db.Get(db.Key(ip_key))
+            except:
+                pass
+            else:
+                for m in Message.all().filter('blocked =', False).filter('sender_ip =', ip):
+                    m.blocked = True
+                    m.put()
+                ip.put()
+        self.redirect('/')
 
+class SiteBrowser(webapp.RequestHandler):
+    def get(self):
+        user = users.get_current_user()
+        context = {
+            'sites': Site.all(),
+            'signout_url': users.create_logout_url("/"),
+            'user': user,
+        }
+        result = render('sites.html.django', context)
+        self.response.out.write(result)
+
+    def post(self):
+        domain = self.request.POST.get('domain', None)
+
+        if domain:
+            site = Site.all().filter('domain =', domain).fetch(1)
+            if len(site) != 1:
+                site = Site(domain=domain)
+                site.put()
+        self.redirect('/sites/')
+        
 def main():
     application = webapp.WSGIApplication([
         ('/inbound/', MessageHandler),
         ('/', MessageBrowser),
         ('/blacklist/', BlacklistBrowser),
         ('/blacklist/add', BlacklistAdd),
+        ('/sites/', SiteBrowser),
     ], debug=settings.DEBUG)
     util.run_wsgi_app(application)
 

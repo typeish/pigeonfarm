@@ -4,7 +4,9 @@ DEBUG = os.getenv('SERVER_SOFTWARE').split('/')[0] == "Development" if os.getenv
 
 TEMPLATE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'templates/')
 
-RECIPIENTS = {
-    # 'site': ['list','of','recipients']
-    'typeish.net': ['contact@typeish.net']
-}
+
+try:
+    from secrets import *
+except ImportError:
+    pass
+    

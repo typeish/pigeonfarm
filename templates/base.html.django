@@ -41,7 +41,7 @@
 
     <body>
         <nav>
-            <a href="/">messages</a> | <a href="/blacklist/">blacklist</a> | {{ user.nickname }} - <a href="{{ signout_url }}">sign out</a>
+            <a href="/">messages</a> | <a href="/blacklist/">blacklist</a> | <a href="/sites/">sites</a> | {{ user.nickname }} - <a href="{{ signout_url }}">sign out</a>
         </nav>
 
         {% block body %}
