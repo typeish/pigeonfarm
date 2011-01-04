@@ -14,7 +14,7 @@ class IP(db.Model):
     notes           = db.TextProperty(indexed=False)            # any notes about the IP address
     added           = db.DateTimeProperty(auto_now_add=True,    # datetime IP added to db
                                      indexed=False)
-    blocked         = db.BooleanProperty(default=False)         # datetime IP blocked
+    blocked         = db.BooleanProperty(default=False)         # IP blocked
     count           = db.IntegerProperty(default=0)             # a running count of messages from the IP while unblocked
     blocked_count   = db.IntegerProperty(default=0)             # a running count of messages from the IP while blocked
     ip              = db.StringProperty(indexed=False)          # the IP address
@@ -63,7 +63,7 @@ class Site(db.Model):
     """
     name        = db.StringProperty(indexed=False)          # the name of the site (for admin purposes, defaults to domain)
     domain      = db.StringProperty()                       # the bare domain of the site, (eg example.com or www.example.com)
-    access_key  = db.StringProperty(indexed=False)          # an arbitrary assigned key for anti-forgery
+    access_key  = db.StringProperty()                       # an arbitrary assigned key for anti-forgery
     recipients  = db.ListProperty(str, indexed=False)       # a list of the assigned recipients
     dispatch    = db.BooleanProperty(default=True, indexed=False)                      # whether or not to dispatch emails
 

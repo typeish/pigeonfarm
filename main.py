@@ -1,9 +1,11 @@
-from datetime import datetime
 from django.utils import simplejson as json
 from google.appengine.api import users
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+
+from datetime import datetime
+from uuid import uuid4
 
 from models import *
 import settings
@@ -39,10 +41,11 @@ class BlacklistAdd(webapp.RequestHandler):
         ip_key = self.request.get('ip_key', None)
         if ip_key:
             try:
-                ip = db.Get(db.Key(ip_key))
+                ip = db.get(db.Key(ip_key))
             except:
                 pass
             else:
+                ip.blocked = True
                 for m in Message.all().filter('blocked =', False).filter('sender_ip =', ip):
                     m.blocked = True
                     m.put()
@@ -65,8 +68,8 @@ class SiteBrowser(webapp.RequestHandler):
 
         if domain:
             site = Site.all().filter('domain =', domain).fetch(1)
-            if len(site) != 1:
-                site = Site(domain=domain)
+            if len(site) == 0:
+                site = Site(domain=domain, access_key=str(uuid4()))
                 site.put()
         self.redirect('/sites/')
         

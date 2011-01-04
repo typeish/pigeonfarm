@@ -21,18 +21,20 @@ class MessageHandler(webapp.RequestHandler):
         
         if not sender_ip.blocked:
             site = self.request.get('site', None)
+            access_key = self.request.get('key', None)
             sender = self.request.get('sender', None)
             subject = self.request.get('subject', None)
             body = self.request.get('body', None)
             referrer = self.request.referrer
             if not referrer:
                 referrer = self.request.referer
-        
-            site = Site.all().filter('domain =', site).fetch(1)
-            if len(site) == 1:
-                site = site[0]
-            else:
-                site = None
+            
+            if site and access_key:
+                site = Site.all().filter('domain =', site).filter('access_key =', access_key).fetch(1)
+                if len(site) == 1:
+                    site = site[0]
+                else:
+                    site = None
         
             if site and sender and subject and body:
                 message = Message(site=site, sender=sender, subject=subject, body=body, sender_ip=sender_ip, referrer=referrer)

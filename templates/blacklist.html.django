@@ -12,7 +12,7 @@
         {% for ip in blacklist %}
             <tr class="{% cycle odd,even %}">
                 <td>{{ ip.ip }}</td>
-                <td>{{ ip.blocked|timesince }}</td>
+                <td>{{ ip.blocked }}</td>
                 <td>{{ ip.count }}</td>
                 <td>{% if ip.notes %}{{ ip.notes }}{% endif %}</td>
             </tr>

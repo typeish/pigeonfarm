@@ -10,10 +10,13 @@
     <table>
         <tr>
             <th class="domain">domain</th>
+            <th></th><th></th>
         </tr>
         {% for site in sites %}
             <tr class="{% cycle odd,even %}">
                 <td>{{ site.domain }}</td>
+                <td>{{ site.access_key }}</td>
+                <td>{{ site.message_set.count }}</td>
             </tr>
         {% endfor %}
     </table>

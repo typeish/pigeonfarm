@@ -6,6 +6,7 @@ api_version: 1
 handlers:
 - url: /inbound/
   script: inbound.py
+  secure: always
 
 - url: /tasks/.*
   script: tasks.py
@@ -14,3 +15,4 @@ handlers:
 - url: .*
   script: main.py
   login: admin
+  secure: always
