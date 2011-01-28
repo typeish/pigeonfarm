@@ -15,24 +15,27 @@ class MessageDispatchTask(webapp.RequestHandler):
             
             email_recipients = []
             sms_recipients = []
-            for r in message.sites.recipients:
+            for r in message.site.recipients:
                 if '@' in r:
                     email_recipients.append(r)
                 else:
                     sms_recipients.append(r)
 
-            email_message = mail.EmailMessage(sender="Pigeon Farm - %s <alecperkins@gmail.com>" % message.site,
-                                        subject="PF - %s - %s: %s" % (message.site, message.sender, message.subject))
+            email_message = mail.EmailMessage(sender="Pigeon Farm - %s <alecperkins@gmail.com>" % message.site.domain,
+                                        subject="PF - %s - %s: %s" % (message.site.domain, message.sender, message.subject))
 
-            email_message.to = email_recipients
             email_message.body = """New message from %s on %s:
             -
             %s
-            """ % (message.sender, message.site, message.body)
+            """ % (message.sender, message.site.domain, message.body)
 
-            email_message.send()
+            for r in email_recipients:
+                email_message.to = r
+                email_message.send()
+
             message.dispatched = datetime.now()
             message.put()
+
 
 class GeolocateTask(webapp.RequestHandler):
     def post(self):
@@ -41,6 +44,7 @@ class GeolocateTask(webapp.RequestHandler):
             # Try getting an object using the provided encoded key
             ip = db.get(db.Key(ip_key))
             ip.geolocate()
+
 
 def main():
     application = webapp.WSGIApplication([
