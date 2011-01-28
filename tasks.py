@@ -12,10 +12,19 @@ class MessageDispatchTask(webapp.RequestHandler):
         if message_key:
             # Try getting an object using the provided encoded key
             message = db.get(db.Key(message_key))
+            
+            email_recipients = []
+            sms_recipients = []
+            for r in message.sites.recipients:
+                if '@' in r:
+                    email_recipients.append(r)
+                else:
+                    sms_recipients.append(r)
+
             email_message = mail.EmailMessage(sender="Pigeon Farm - %s <alecperkins@gmail.com>" % message.site,
                                         subject="PF - %s - %s: %s" % (message.site, message.sender, message.subject))
 
-            email_message.to = message.site.recipients
+            email_message.to = email_recipients
             email_message.body = """New message from %s on %s:
             -
             %s

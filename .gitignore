@@ -25,3 +25,4 @@ syntax: glob
 .CVS
 .hg*
 secrets.py
+pigeonfarm

@@ -10,7 +10,7 @@ from uuid import uuid4
 from models import *
 import settings
 
-from utils import render
+from utils import *
 
 class MessageBrowser(webapp.RequestHandler):
     def get(self):
@@ -64,13 +64,14 @@ class SiteBrowser(webapp.RequestHandler):
         self.response.out.write(result)
 
     def post(self):
+        name = self.request.POST.get('name', None)
         domain = self.request.POST.get('domain', None)
+        recipients = parse_recipient_list(self.request.POST.get('recipients', None))
 
         if domain:
             site = Site.all().filter('domain =', domain).fetch(1)
             if len(site) == 0:
-                site = Site(domain=domain, access_key=str(uuid4()))
-                site.put()
+                Site(domain=domain, name=name, recipients=recipients, access_key=str(uuid4())).put()
         self.redirect('/sites/')
         
 def main():

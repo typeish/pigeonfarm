@@ -64,8 +64,9 @@ class Site(db.Model):
     name        = db.StringProperty(indexed=False)          # the name of the site (for admin purposes, defaults to domain)
     domain      = db.StringProperty()                       # the bare domain of the site, (eg example.com or www.example.com)
     access_key  = db.StringProperty()                       # an arbitrary assigned key for anti-forgery
-    recipients  = db.ListProperty(str, indexed=False)       # a list of the assigned recipients
-    dispatch    = db.BooleanProperty(default=True, indexed=False)                      # whether or not to dispatch emails
+    recipients  = db.ListProperty(str, indexed=False)       # a list of the assigned recipients, either email@address.com or 123-555-1234
+    dispatch    = db.BooleanProperty(default=True, indexed=False)                      # whether or not to dispatch emails/sms
+
 
 class Message(db.Model):
     """

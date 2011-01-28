@@ -2,21 +2,28 @@
 
 {% block body %}
     <form method="POST">
-        <input type="text" name="domain"/>
+        <input type="text" name="name" placeholder="name"/>
+        <input type="text" name="domain" placeholder="domain.com"/>
+        <input type="text" name="recipients" placeholder="recipient@example.com,123-555-7890"/>
         <button>Add Site</button>
     </form>
     
     <h1>Sites</h1>
     <table>
         <tr>
-            <th class="domain">domain</th>
-            <th></th><th></th>
+            <th>Name</th>
+            <th class="domain">Domain</th>
+            <th>Access Key</th>
+            <th># Messages</th>
+            <th>Recipients</th>
         </tr>
         {% for site in sites %}
             <tr class="{% cycle odd,even %}">
+                <td>{{ site.name }}</td>
                 <td>{{ site.domain }}</td>
                 <td>{{ site.access_key }}</td>
                 <td>{{ site.message_set.count }}</td>
+                <td>{% if site.dispatch %}<ul>{% for r in site.recipients %}<li>{{ r }}</li>{% endfor %}</ul>{% else %}---{% endif %}</td>
             </tr>
         {% endfor %}
     </table>

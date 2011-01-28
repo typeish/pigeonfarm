@@ -20,8 +20,8 @@ function PigeonFarm(settings) {
         
         function initForm() {
             
-            var fields_html =   '<input id="pf-contact-sender" type="text" placeholder="your email address"><span id="pf-contact-sender-status" style="visibility:hidden;">Please enter a valid email address</span><br />' +
-                                '<input id="pf-contact-subject" type="text" placeholder="subject"><span id="pf-contact-subject-status" style="visibility:hidden;">Please enter a subject</span><br />' +
+            var fields_html =   'email: <input id="pf-contact-sender" type="text" placeholder="your email address"><span id="pf-contact-sender-status" style="visibility:hidden;">Please enter a valid email address</span><br />' +
+                                'subject: <input id="pf-contact-subject" type="text" placeholder="subject"><span id="pf-contact-subject-status" style="visibility:hidden;">Please enter a subject</span><br />' +
                                 '<textarea id="pf-contact-body" placeholder="message"></textarea><br />' +
                                 '<button id="pf-contact-send">send &raquo;</button><img id="pf-contact-spinner" src="http://typestatic.net/pigeonfarm/images/small-spinner.gif" style="display:none;"/>' +
                                 '<span id="pf-contact-general-status" style="visibility:hidden;"></span>';
@@ -120,8 +120,8 @@ function PigeonFarm(settings) {
                         fields.status.text("There was a problem. Please try again.");
                         fields.status.css({"visibility":"visible"});
                     }
-                    if(settings.external_callback) {
-                        settings.external_callback(response);
+                    if(settings.callback) {
+                        settings.callback(response);
                     }
                     fields.spinner.hide();
                 }, "jsonp");
@@ -131,7 +131,7 @@ function PigeonFarm(settings) {
         }
         
         function showSuccessNotification() {
-            var success_notice_html = 'Success! Your message has been sent. We will get back to you as soon as possible.';
+            var success_notice_html = settings.success_message ? settings.success_message : 'Success! Your message has been sent. We will get back to you as soon as possible.';
             jQuery(settings.container).html(success_notice_html);
         }
         
