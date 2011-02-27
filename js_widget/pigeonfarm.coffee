@@ -12,11 +12,20 @@ PigeonFarm = (settings) ->
         data = {}
         fields = {}
         
+        email_label = if settings.email_label? then settings.email_label else "Email:"
+        subject_label = if settings.subject_label? then settings.subject_label else "Subject:"
+        
+        if email_label
+            email_label = "<label for='pf-contact-sender'>#{email_label}</label> "
+        
+        if subject_label
+            subject_label = "<label for='pf-contact-subject'>#{subject_label}</label> "
+        
         initForm = ->
             fields_html = """
-                email: <input id='pf-contact-sender' type='text' placeholder='your email address'><span id='pf-contact-sender-status' style='visibility:hidden;'>Please enter a valid email address</span><br />
-                subject: <input id='pf-contact-subject' type='text' placeholder='subject'><span id='pf-contact-subject-status' style='visibility:hidden;'>Please enter a subject</span><br />
-                <textarea id='pf-contact-body" placeholder='message'></textarea><br />
+                #{email_label}<input id='pf-contact-sender' type='text' placeholder='your email address'><span id='pf-contact-sender-status' style='visibility:hidden;'>Please enter a valid email address</span><br />
+                #{subject_label}<input id='pf-contact-subject' type='text' placeholder='subject'><span id='pf-contact-subject-status' style='visibility:hidden;'>Please enter a subject</span><br />
+                <textarea id='pf-contact-body' placeholder='message'></textarea><br />
                 <button id='pf-contact-send'>send &raquo;</button><img id='pf-contact-spinner' src='#{spinner_gif_base64}' style=display:none;/>
                 <span id='pf-contact-general-status' style='visibility:hidden;'></span>
                 """

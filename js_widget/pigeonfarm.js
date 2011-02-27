@@ -1,13 +1,21 @@
 (function() {
   var PigeonFarm, spinner_gif_base64;
   PigeonFarm = function(settings) {
-    var clearError, data, fields, getData, initForm, sendMessage, showSuccessNotification, validateBody, validateEmail, validateSubject;
+    var clearError, data, email_label, fields, getData, initForm, sendMessage, showSuccessNotification, subject_label, validateBody, validateEmail, validateSubject;
     if (jQuery && settings && settings.container) {
       data = {};
       fields = {};
+      email_label = settings.email_label != null ? settings.email_label : "Email:";
+      subject_label = settings.subject_label != null ? settings.subject_label : "Subject:";
+      if (email_label) {
+        email_label = "<label for='pf-contact-sender'>" + email_label + "</label> ";
+      }
+      if (subject_label) {
+        subject_label = "<label for='pf-contact-subject'>" + subject_label + "</label> ";
+      }
       initForm = function() {
         var fields_html;
-        fields_html = "email: <input id='pf-contact-sender' type='text' placeholder='your email address'><span id='pf-contact-sender-status' style='visibility:hidden;'>Please enter a valid email address</span><br />\nsubject: <input id='pf-contact-subject' type='text' placeholder='subject'><span id='pf-contact-subject-status' style='visibility:hidden;'>Please enter a subject</span><br />\n<textarea id='pf-contact-body\" placeholder='message'></textarea><br />\n<button id='pf-contact-send'>send &raquo;</button><img id='pf-contact-spinner' src='" + spinner_gif_base64 + "' style=display:none;/>\n<span id='pf-contact-general-status' style='visibility:hidden;'></span>";
+        fields_html = "" + email_label + "<input id='pf-contact-sender' type='text' placeholder='your email address'><span id='pf-contact-sender-status' style='visibility:hidden;'>Please enter a valid email address</span><br />\n" + subject_label + "<input id='pf-contact-subject' type='text' placeholder='subject'><span id='pf-contact-subject-status' style='visibility:hidden;'>Please enter a subject</span><br />\n<textarea id='pf-contact-body' placeholder='message'></textarea><br />\n<button id='pf-contact-send'>send &raquo;</button><img id='pf-contact-spinner' src='" + spinner_gif_base64 + "' style=display:none;/>\n<span id='pf-contact-general-status' style='visibility:hidden;'></span>";
         jQuery(settings.container).append(fields_html);
         fields.status = jQuery("#pf-contact-general-status");
         fields.sender = jQuery("#pf-contact-sender");
