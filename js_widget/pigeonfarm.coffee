@@ -3,9 +3,11 @@
 #     site                  : "example.com",                        // site domain
 #     key                   : "somegibberish-uuid-key",             // site access key
 #     container             : "#selector"                           // selector of element to contain the form
-#     [success_message]     : "Success, the message has been sent!" // an optional success message override
+#     [success_message]     : "Success, the message has been sent!" // (optional) success message override
+#     [email_label]         : "Email:"                              // (optional) email label override, set to "" to remove
+#     [subject_label]       : "Subject:"                            // (optional) subject label override, set to "" to remove
 # }
-# PigeonFarm(settings);                            // initialize form
+# PigeonFarm(settings);     // initialize form
 
 PigeonFarm = (settings) ->
     if jQuery and settings and settings.container
