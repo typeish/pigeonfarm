@@ -10,6 +10,7 @@ Contact forms are generally low usage relative to the overall site, so it's sill
 The JavaScript widget included in the page produces a set of fields for a contact form. The input from these fields then gets sent to the AppEngine app, which stores the message. The app supports email dispatching to recipients listed for each site.
 
 Each site on the server has the following attributes:
+
 * Name          : arbitrary name for human-friendliness
 * Domain        : the domain of the site where the contact form is
 * Recipients    : list of email addresses to send messages to
@@ -46,16 +47,23 @@ client side:
 
 site config:
 
-    name: my site
-    domain: example.com
-    access key: somegibberish-uuid-key
-    recipients: person@example.com, other.person@example.com
+    name        : my site
+    domain      : example.com
+    access key  : somegibberish-uuid-key
+    recipients  : person@example.com, other.person@example.com
 
 The site will dispatch emails to person@example.com and other.person@example.com every time it receives a message from example.com
 
+
+### Styling
+
+The `pigeonfarm.js` snippet doesn't include any style information. Except for the included spinner.gif image, the look is up to you. Any field that doesn't validate gets the class `pf-error` added to it, which you can use to style the error feedback.
+
+
 ### See it in action
-[alecperkins.net/contact/](http://alecperkins.net/contact/)
-[typeish.net/#engage](http://typeish.net/#engage)
+
+* [alecperkins.net/contact/](http://alecperkins.net/contact/)
+* [typeish.net/#engage](http://typeish.net/#engage)
 
 ## TODO / wishlist
 
