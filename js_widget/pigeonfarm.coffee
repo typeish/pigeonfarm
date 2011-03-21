@@ -86,8 +86,8 @@ PigeonFarm = (settings) ->
         validateSubject = (subject) ->
             return subject isnt ""
 
-        validateBody = (subject) ->
-            return subject isnt ""
+        validateBody = (body) ->
+            return body isnt ""
 
         clearError = ->
             jQuery(this).removeClass("pf-error")

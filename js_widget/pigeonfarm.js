@@ -71,8 +71,8 @@
       validateSubject = function(subject) {
         return subject !== "";
       };
-      validateBody = function(subject) {
-        return subject !== "";
+      validateBody = function(body) {
+        return body !== "";
       };
       clearError = function() {
         return jQuery(this).removeClass("pf-error");
