@@ -21,8 +21,18 @@ class MessageDispatchTask(webapp.RequestHandler):
                 else:
                     sms_recipients.append(r)
 
-            email_message = mail.EmailMessage(sender="Pigeon Farm - %s <alecperkins@gmail.com>" % message.site.domain,
-                                        subject="PF - %s - %s: %s" % (message.site.domain, message.sender, message.subject))
+            # BUILD EMAIL MESSAGE
+            #   The sender property must be a valid address for the app. The
+            #   reply-to property is set to the address given by the sender,
+            #   allowing for direct replies.
+            #
+            #   See http://code.google.com/appengine/docs/python/mail/emailmessagefields.html
+            #   for more information.
+            email_message = mail.EmailMessage(
+                sender      = "%s contact form <%s@pigeon-farm.appspotmail.com>" % (message.site.name, message.site.domain),
+                subject     = "PF - %s - %s: %s" % (message.site.domain, message.sender, message.subject),
+                reply_to    = "%s" % (message.sender,),
+            )
 
             email_message.body = """New message from %s on %s:
             -

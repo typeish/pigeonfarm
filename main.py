@@ -1,8 +1,8 @@
-from django.utils import simplejson as json
-from google.appengine.api import users
-from google.appengine.api.labs import taskqueue
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
+from django.utils                   import simplejson as json
+from google.appengine.api           import users
+from google.appengine.api.labs      import taskqueue
+from google.appengine.ext           import webapp
+from google.appengine.ext.webapp    import util
 
 from datetime import datetime
 from uuid import uuid4
@@ -11,19 +11,6 @@ from models import *
 import settings
 
 from utils import *
-
-class MessageBrowser(webapp.RequestHandler):
-    def get(self):
-        user = users.get_current_user()
-        
-        context = {
-            #'new_messages': Message.all().filter('blocked =', False).order('-received').filter('received >', datetime.now()),
-            'old_messages': Message.all().filter('blocked =', False).order('-received').filter('received <=', datetime.now()),
-            'signout_url': users.create_logout_url("/"),
-            'user': user,
-        }
-        result = render('messages.html.django', context)
-        self.response.out.write(result)
 
 class BlacklistBrowser(webapp.RequestHandler):
     def get(self):
@@ -51,6 +38,19 @@ class BlacklistAdd(webapp.RequestHandler):
                     m.put()
                 ip.put()
         self.redirect('/')
+
+class MessageBrowser(webapp.RequestHandler):
+    def get(self):
+        user = users.get_current_user()
+        
+        context = {
+            #'new_messages': Message.all().filter('blocked =', False).order('-received').filter('received >', datetime.now()),
+            'old_messages': Message.all().filter('blocked =', False).order('-received').filter('received <=', datetime.now()),
+            'signout_url': users.create_logout_url("/"),
+            'user': user,
+        }
+        result = render('messages.html.django', context)
+        self.response.out.write(result)
 
 class SiteBrowser(webapp.RequestHandler):
     def get(self):

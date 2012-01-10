@@ -19,3 +19,6 @@ handlers:
   script: main.py
   login: admin
   secure: always
+
+inbound_services:
+- mail
